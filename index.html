@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Vis Network | Data | Dynamic filtering</title>
+    <script
+      type="text/javascript"
+      src="vis-network.js"
+    ></script>
+
+    <style type="text/css">
+      #mynetwork {
+        width: 100%;
+        height: 800px;
+        border: 1px solid lightgray;
+        background-color: whitesmoke;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      code {
+        font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+          monospace;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <h1>Dynamic filtering</h1>
+    <p>
+      With
+      <a
+        href="https://visjs.github.io/vis-data/data/dataview.html"
+        target="_blank"
+      >
+        <code>vis.DataView</code></a
+      >
+      on top of vis.DataSet you can filter displayed data without modifying the
+      data source.
+    </p>
+    <label>
+      Filter nodes
+      <select id="nodeFilterSelect">
+        <option value="">All characters</option>
+        <option value="jg">전공</option>
+        <option value="msc">MSC</option>
+        <option value="gy">교양</option>
+        <option value="ps">필수</option>
+        <option value="sps">선택적 필수</option>
+        <option value="st">선택</option>
+        <option value="sg">설계</option>
+        <option value="bgg">비교과과정</option>
+      </select>
+    </label>
+    <br />
+    <br />
+    <label>
+      선수강 조건
+      <div>
+        <label>
+          <input type="checkbox" name="edgesFilter" value="pilsun" checked />
+          Is <span style="color: red">필수선수</span> of
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="checkbox" name="edgesFilter" value="kwonsun" checked />
+          Is <span style="color: blue">권장선수</span> of
+        </label>
+      </div>
+    </label>
+    <br />
+    <div id="mynetwork"></div>
+    <script type="text/javascript">
+      const nodeFilterSelector = document.getElementById("nodeFilterSelect");
+      const edgeFilters = document.getElementsByName("edgesFilter");
+      function startNetwork(data) {
+        const container = document.getElementById("mynetwork");
+        const options = {
+        nodes: {
+          shape: "box",
+          font: {
+            bold: {
+              color: "#0077aa",
+            },
+          },
+        },
+        physics: {
+          enabled: false,
+        },
+      };
+        new vis.Network(container, data, options);
+      }
+
+      /**
+       * In this example we do not mutate nodes or edges source data.
+       */
+    
+      function preTitle(text) {
+        const container = document.createElement("pre");
+        container.innerText = text;
+        return container;
+      }
+      const nodes = new vis.DataSet([
+        { id: 1, label: "생산 및 운영관리", cat: "jg", opt: "sps", ser:"sg", color: { color: "red" },x:800,y:1600,
+        title: preTitle("3학년 2학기")},
+        { id: 2, label: "유통물류관리", cat: "jg", opt: "st",ser:"",color: "lime",x:1000,y:1500},
+        { id: 3, label: "경영과학1", cat: "jg", opt: "ps",ser:"sg",color: "rgb(255,168,7)",x:600,y:1200},
+        { id: 4, label: "데이터프로그래밍기초와실습", cat: "msc", opt: "ps",ser:"", color: "#7BE141",x:400,y:1300},
+        { id: 5, label: "응용통계학", cat: "jg", opt: "ps",ser:"",color: "rgba(97,195,238,0.5)",x:400,y:1200},
+        { id: 6, label: "미적분학 및 연습1", cat: "msc", opt: "ps",ser:"", x:0,y:1100,color: { background: "pink", border: "purple" }},
+        { id: 7, label: "미적분학 및 연습2", cat: "msc", opt: "ps",ser:"", x:200,y:1100},
+        { id: 8, label: "확률 및 통계학", cat: "msc", opt: "st",ser:"", x:0,y:1200},
+        { id: 9, label: "프로그래밍기초와 실습", cat: "msc", opt: "st",ser:"", x:0,y:1300},
+        { id: 10, label: "일반물리학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1400},
+        { id: 11, label: "일반물리학및 실험2", cat: "msc", opt: "sps",ser:"", x:200,y:1400},
+        { id: 12, label: "일반화학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1500 },
+        { id: 13, label: "일반화학및 실험2", cat: "msc", opt: "sps",ser:"", x:200,y:1500 },
+        { id: 14, label: "일반생물학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1600 },
+        { id: 15, label: "일반생물학및 실험1", cat: "msc", opt: "sps",ser:"", x:200,y:1600 },
+        { id: 16, label: "산업시스템 공학의 이해", cat: "jg", opt: "ps",ser:"",x:0, y:1700 },
+        { id: 17, label: "어드벤쳐디자인", cat: "jg", opt: "ps",ser:"sg",x:200,y:1700 },
+        { id: 18, label: "자아와명상1", cat: "gy", opt: "ps",ser:"",x:0,y:1800 },
+        { id: 19, label: "자아와명상2", cat: "gy", opt: "ps",ser:"",x:200,y:1800 },
+        { id: 20, label: "커리어디자인", cat: "gy", opt: "ps",ser:"",x:0,y:1900 },
+        { id: 21, label: "불교와인간", cat: "gy", opt: "ps",ser:"",x:200,y:1900 },
+        { id: 22, label: "기술보고서작성및발표", cat: "gy", opt: "ps",ser:"",x:0,y:2000 },
+        { id: 23, label: "기업가정신과리더십 택1", cat: "gy", opt: "ps",ser:"",x:200,y:2000 },
+        { id: 24, label: "EAS1", cat: "gy", opt: "st",ser:"",x:0,y:2100 },
+        { id: 25, label: "EAS2", cat: "gy", opt: "st",ser:"",x:200,y:2100 },
+        { id: 26, label: "공학선형대수학", cat: "msc", opt: "ps",ser:"",x:400,y:1100 },
+        { id: 27, label: "공학수학1", cat: "msc", opt: "st",ser:"",x:600,y:1100 },
+        { id: 28, label: "데이터분석입문", cat: "jg", opt: "sps",ser:"",x:600,y:1350 },
+        { id: 29, label: "3D모델링", cat: "jg", opt: "sps",ser:"sg",x:400,y:1500 },
+        { id: 30, label: "인간공학", cat: "jg", opt: "sps",ser:"sg",x:400,y:1600 },
+        { id: 31, label: "산업시스템프로그래밍1", cat: "jg", opt: "ps",ser:"sg",x:400,y:1700 },
+        { id: 32, label: "정보시스템분석설계", cat: "jg", opt: "sps",ser:"sg",x:600,y:1750 },
+        { id: 33, label: "기술창조와 특허", cat: "gy", opt: "sps",ser:"",x:400,y:2000 },
+        { id: 34, label: "공학경제", cat: "gy", opt: "ps",ser:"",x:600,y:2000 },
+        { id: 35, label: "공학윤리", cat: "gy", opt: "sps",ser:"",x:400,y:2100 },
+        { id: 36, label: "경영과학2", cat: "jg", opt: "st",ser:"",x:800,y:1150 },
+        { id: 37, label: "실험계획법", cat: "jg", opt: "st",ser:"",x:800,y:1250 },
+        { id: 38, label: "머신러닝1", cat: "jg", opt: "sps",ser:"",x:800,y:1350 },
+        { id: 40, label: "금융공학입문", cat: "jg", opt: "st",ser:"",x:800,y:1800 },
+        { id: 41, label: "품질공학", cat: "jg", opt: "sps",ser:"",x:1000,y:1100 },
+        { id: 42, label: "첨단제조공학", cat: "jg", opt: "st",ser:"",x:1000,y:1200 },
+        { id: 43, label: "머신러닝2", cat: "jg", opt: "st",ser:"",x:1000,y:1300 },
+        { id: 44, label: "기술경영", cat: "jg", opt: "sps",ser:"",x:1000,y:1400 },
+        { id: 45, label: "유통물류관리", cat: "jg", opt: "st",ser:"",x:1000,y:1500 },
+        { id: 46, label: "헬스케어공학", cat: "jg", opt: "st",ser:"",x:1000,y:1600 },
+        { id: 47, label: "산업시스템프로그래밍2", cat: "jg", opt: "st",ser:"sg",x:1000,y:1700 },
+        { id: 48, label: "서비스공학", cat: "jg", opt: "st",ser:"",x:1200,y:1300 },
+        { id: 49, label: "프로젝트관리", cat: "jg", opt: "sps",ser:"sg",x:1200,y:1400 },
+        { id: 50, label: "시뮬레이션과응용", cat: "jg", opt: "sps",ser:"sg",x:1200,y:1500 },
+        { id: 51, label: "데이터어낼리틱스", cat: "jg", opt: "st",ser:"",x:1200,y:1600 },
+        { id: 52, label: "정보시스템통합 및 실습", cat: "jg", opt: "st",ser:"sg",x:1200,y:1700 },
+        { id: 53, label: "산업시스템 공학종합설계", cat: "jg", opt: "ps",ser:"sg",x:1200,y:1800 },
+        { id: 54, label: "제품개발", cat: "jg", opt: "st",ser:"sg",x:1400,y:1400 },
+        { id: 55, label: "UI/UX 설계", cat: "jg", opt: "st",ser:"",x:1400,y:1500 },
+        { id: 56, label: "산업AI", cat: "jg", opt: "st",ser:"",x:1400,y:1600 },
+        { id: 57, label: "캡스톤 디자인 대회", cat: "jg", opt: "bgg",ser:"",x:1400,y:1700 },
+      ]);
+
+      const edges = new vis.DataSet([
+        {
+          from: 6,
+          to: 7,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 12,
+          to: 13,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 24,
+          to: 25,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 4,
+          to: 3,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 28,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 44,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 40,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 41,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 36,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 37,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 3,
+          to: 45,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 34,
+          to: 40,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 34,
+          to: 44,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 17,
+          to: 53,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 1,
+          to: 2,
+          relation: "pilsun",
+          arrows: "to, from",
+          color: { color: "red" },
+        },
+        {
+          from: 3,
+          to: 2,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 48,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 49,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 5,
+          to: 50,
+          relation: "pilsun",
+          arrows: "to",
+          color: { color: "red" },
+        },
+        {
+          from: 8,
+          to: 5,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 9,
+          to: 31,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 10,
+          to: 11,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 14,
+          to: 15,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 16,
+          to: 17,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 18,
+          to: 19,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 24,
+          to: 25,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 7,
+          to: 26,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 30,
+          to: 46,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 30,
+          to: 55,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 31,
+          to: 47,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 33,
+          to: 40,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 33,
+          to: 44,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 35,
+          to: 40,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 35,
+          to: 44,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 28,
+          to: 38,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 32,
+          to: 52,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 32,
+          to: 56,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 32,
+          to: 55,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 38,
+          to: 43,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+        {
+          from: 38,
+          to: 51,
+          relation: "kwonsun",
+          arrows: "to",
+          color: { color: "blue" },
+        },
+      ]);
+
+      /**
+       * filter values are updated in the outer scope.
+       * in order to apply filters to new values, DataView.refresh() should be called
+       */
+      let nodeFilterValue = "";
+      const edgesFilterValues = {
+        pilsun: true,
+        kwonsun: true,
+      };
+
+      /*
+      filter function should return true or false
+      based on whether item in DataView satisfies a given condition.
+    */
+      const nodesFilter = (node) => {
+        if (nodeFilterValue === "") {
+          return true;
+        }
+        switch (nodeFilterValue) {
+          case "jg":
+            return node.cat === "jg";
+          case "msc":
+            return node.cat === "msc";
+          case "gy":
+            return node.cat === "gy";
+          case "ps":
+            return node.opt === "ps";
+          case "sps":
+            return node.opt === "sps";
+          case "st":
+            return node.opt === "st";
+          case "sg":
+            return node.ser === "sg";
+          case "bgg":
+            return node.opt === "bgg";
+          default:
+            return true;
+        }
+      };
+
+      const edgesFilter = (edge) => {
+        return edgesFilterValues[edge.relation];
+      };
+
+      const nodesView = new vis.DataView(nodes, { filter: nodesFilter });
+      const edgesView = new vis.DataView(edges, { filter: edgesFilter });
+
+      nodeFilterSelector.addEventListener("change", (e) => {
+        // set new value to filter variable
+        nodeFilterValue = e.target.value;
+        /*
+        refresh DataView,
+        so that its filter function is re-calculated with the new variable
+      */
+        nodesView.refresh();
+      });
+
+      edgeFilters.forEach((filter) =>
+        filter.addEventListener("change", (e) => {
+          const { value, checked } = e.target;
+          edgesFilterValues[value] = checked;
+          edgesView.refresh();
+        })
+      );
+
+      startNetwork({ nodes: nodesView, edges: edgesView });
+    </script>
+  </body>
+</html>
