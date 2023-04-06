@@ -110,7 +110,7 @@
       const nodes = new vis.DataSet([
         
         { id: 1,  font: {size: 25}, label: "생산 및 운영관리", cat: "jg", opt: "sps", ser:"sg",x:800,y:1600, color: "#ee5d59",
-        title: preTitle('어떻게 넣어야할까? merge연습용'),shapeProperties: { borderDashes: [5, 10]}, widthConstraint: { maximum: 140 },widthConstraint: { maximum: 140 }},
+        title: '어떻게 넣어야할까? merge연습용',shapeProperties: { borderDashes: [5, 10]}, widthConstraint: { maximum: 140 },widthConstraint: { maximum: 140 }},
         { id: 2, font: {size: 25},label: "유통물류관리", cat: "jg", opt: "st",ser:"", color: "#ee5d59",x:1000,y:1500,widthConstraint: { maximum: 140 }},
         { id: 3, font: {size: 25},label: "경영과학1", cat: "jg", opt: "ps",ser:"sg", color: "#ee5d59",x:600,y:1200,widthConstraint: { maximum: 140 }},
         { id: 4, font: {size: 20},label: "데이터프로그래밍기초와실습", cat: "msc", opt: "ps",ser:"", color: "#fafa7f",x:400,y:1300, widthConstraint: { maximum: 140 }},
@@ -490,6 +490,10 @@
             return true;
         }
       };
+      
+      for( i = 1 ; i <= 57 ; i++){
+        nodes.update({id: i , title: nodes.label });
+    }
 
       const edgesFilter = (edge) => {
         return edgesFilterValues[edge.relation];
