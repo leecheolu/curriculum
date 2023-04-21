@@ -15,7 +15,7 @@
         border: 1px solid lightgray;
         background-color: whitesmoke;
       }
-      
+
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
           "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
@@ -30,7 +30,7 @@
     </style>
   </head>
   <body>
-    
+
     <h1>Dynamic filtering</h1>
     <p>
       With
@@ -92,80 +92,104 @@
         },
         physics: {
           enabled: false,
+          stabilization: false
         },
+
       };
-        new vis.Network(container, data, options);
+      
+      var network = new vis.Network(container, data, options);
+      network.on("click", function(params) { //oubleClick 으로 바꾸면 더블클릭되는데 클릭이 더 나은것같음
+        var nodeId = params.nodes[0];
+        var node = nodes.get(nodeId); 
+        if (node.opacity === 1) { 
+          node.opacity = 0.2;
+        } else { 
+          node.opacity = 1;
+        }
+        var connectedEdges = network.getConnectedEdges(nodeId);
+        for (var i = 0; i < connectedEdges.length; i++) {
+          var edgeId = connectedEdges[i];
+          var edge = edges.get(edgeId);
+          if (node.opacity === 1) { 
+            edge.opacity = 1;
+            edge.color = { color: "#848484", highlight: "#848484"};
+          } else {
+            edge.opacity = 0.5;
+            edge.color = { color: "#848484", highlight: "#848484", opacity: 0.5 };
+          }
+
+    edges.update(edge);
+  }  
+
+        nodes.update(node);
+        });
       }
 
       /**
        * In this example we do not mutate nodes or edges source data.
        */
-    
-      function preTitle(text) {
-        const container = document.createElement("pre");
-        container.innerText = text;
-        return container;
-      }
-     
+
+
       const nodes = new vis.DataSet([
-        
+
         { id: 1,  font: {size: 25}, label: "생산 및 운영관리", cat: "jg", opt: "sps", ser:"sg",x:800,y:1600, color: "#ee5d59",
-        title: '어떻게 넣어야할까? merge연습용',shapeProperties: { borderDashes: [5, 10]}, widthConstraint: { maximum: 140 },widthConstraint: { maximum: 140 }},
-        { id: 2, font: {size: 25},label: "유통물류관리", cat: "jg", opt: "st",ser:"", color: "#ee5d59",x:1000,y:1500,widthConstraint: { maximum: 140 }},
-        { id: 3, font: {size: 25},label: "경영과학1", cat: "jg", opt: "ps",ser:"sg", color: "#ee5d59",x:600,y:1200,widthConstraint: { maximum: 140 }},
-        { id: 4, font: {size: 20},label: "데이터프로그래밍기초와실습", cat: "msc", opt: "ps",ser:"", color: "#fafa7f",x:400,y:1300, widthConstraint: { maximum: 140 }},
-        { id: 5, font: {size: 25},label: "응용통계학", cat: "jg", opt: "ps",ser:"", color: "#ee5d59",x:400,y:1200,widthConstraint: { maximum: 140 }},
-        { id: 6, font: {size: 25},label: "미적분학및 연습1", cat: "msc", opt: "ps",ser:"", x:0,y:1100,color: {background: "#fafa7f",border: "black",},widthConstraint: { maximum: 140 }},   
-        { id: 7, font: {size: 25},label: "미적분학및 연습2", cat: "msc", opt: "ps",ser:"", x:200,y:1100, color: {background: "#fafa7f",border: "black",},widthConstraint: { maximum: 140 }},
-        { id: 8, font: {size: 25},label: "확률 및 통계학", cat: "msc", opt: "st",ser:"", x:0,y:1200, color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 9, font: {size: 20},label: "프로그래밍 기초와실습", cat: "msc", opt: "st",ser:"", x:0,y:1300, color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 10, font: {size: 25},label: "일반물리학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1400, color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 11, font: {size: 25},label: "일반물리학및 실험2", cat: "msc", opt: "sps",ser:"", x:200,y:1400, color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 12, font: {size: 25},label: "일반화학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1500 , color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 13, font: {size: 25},label: "일반화학및 실험2", cat: "msc", opt: "sps",ser:"", x:200,y:1500 , color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 14, font: {size: 25},label: "일반생물학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1600 , color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 15, font: {size: 25},label: "일반생물학및 실험1", cat: "msc", opt: "sps",ser:"", x:200,y:1600 , color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 16, font: {size: 20},label: "산업시스템 공학의 이해", cat: "jg", opt: "ps",ser:"",x:0, y:1700, color: "#ee5d59" ,widthConstraint: { maximum: 140 }},
-        { id: 17, font: {size: 22},label: "어드벤쳐디자인", cat: "jg", opt: "ps",ser:"sg",x:200,y:1700 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 18, font: {size: 25},label: "자아와명상1", cat: "gy", opt: "ps",ser:"",x:0,y:1800, color: "#8dff75" ,widthConstraint: { maximum: 140 }},
-        { id: 19, font: {size: 25},label: "자아와명상2", cat: "gy", opt: "ps",ser:"",x:200,y:1800, color: "#8dff75" ,widthConstraint: { maximum: 140 }},
-        { id: 20, font: {size: 25},label: "커리어디자인", cat: "gy", opt: "ps",ser:"",x:0,y:1900, color: "#8dff75" ,widthConstraint: { maximum: 140 }},
-        { id: 21, font: {size: 25},label: "불교와인간", cat: "gy", opt: "ps",ser:"",x:200,y:1900, color: "#8dff75" ,widthConstraint: { maximum: 140 }},
-        { id: 22, font: {size: 20},label: "기술보고서작성및 발표", cat: "gy", opt: "ps",ser:"",x:0,y:2000, color: "#8dff75",widthConstraint: { maximum: 140 }},
-        { id: 23, font: {size: 25},label: "기업가정신과리더십 택1", cat: "gy", opt: "ps",ser:"",x:200,y:2000, color: "#8dff75" ,widthConstraint: { maximum: 140 }},
-        { id: 24, font: {size: 25},label: "EAS1", cat: "gy", opt: "st",ser:"",x:0,y:2100, color: "#8dff75" ,widthConstraint: { maximum: 140 }},
-        { id: 25, font: {size: 25},label: "EAS2", cat: "gy", opt: "st",ser:"",x:200,y:2100, color: "#8dff75" ,widthConstraint: { maximum: 140 }},
-        { id: 26, font: {size: 20},label: "공학선형대수학", cat: "msc", opt: "ps",ser:"",x:400,y:1100 , color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 27, font: {size: 25},label: "공학수학1", cat: "msc", opt: "st",ser:"",x:600,y:1100 , color: "#fafa7f",widthConstraint: { maximum: 140 }},
-        { id: 28, font: {size: 20},label: "데이터분석입문", cat: "jg", opt: "sps",ser:"",x:600,y:1350 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 29, font: {size: 25},label: "3D모델링", cat: "jg", opt: "sps",ser:"sg",x:400,y:1500 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 30, font: {size: 25},label: "인간공학", cat: "jg", opt: "sps",ser:"sg",x:400,y:1600 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 31, font: {size: 25},label: "산업시스템 프로그래밍1", cat: "jg", opt: "ps",ser:"sg",x:400,y:1700 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 32, font: {size: 25},label: "정보시스템 분석설계", cat: "jg", opt: "sps",ser:"sg",x:600,y:1750 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 33, font: {size: 25},label: "기술창조와 특허", cat: "gy", opt: "sps",ser:"",x:400,y:2000 , color: "#70fdff",widthConstraint: { maximum: 140 }},
-        { id: 34, font: {size: 25},label: "공학경제", cat: "gy", opt: "ps",ser:"",x:600,y:2000 , color: "#70fdff",widthConstraint: { maximum: 140 }},
-        { id: 35, font: {size: 25},label: "공학윤리", cat: "gy", opt: "sps",ser:"",x:400,y:2100 , color: "#70fdff",widthConstraint: { maximum: 140 }},
-        { id: 36, font: {size: 25},label: "경영과학2", cat: "jg", opt: "st",ser:"",x:800,y:1150, color: "#ee5d59" ,widthConstraint: { maximum: 140 }},
-        { id: 37, font: {size: 25},label: "실험계획법", cat: "jg", opt: "st",ser:"",x:800,y:1250 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 38, font: {size: 25},label: "머신러닝1", cat: "jg", opt: "sps",ser:"",x:800,y:1350 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 40, font: {size: 25},label: "금융공학입문", cat: "jg", opt: "st",ser:"",x:800,y:1800 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 41, font: {size: 25},label: "품질공학", cat: "jg", opt: "sps",ser:"",x:1000,y:1100 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 42, font: {size: 25},label: "첨단제조공학", cat: "jg", opt: "st",ser:"",x:1000,y:1200 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 43, font: {size: 25},label: "머신러닝2", cat: "jg", opt: "st",ser:"",x:1000,y:1300 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 44, font: {size: 25},label: "기술경영", cat: "jg", opt: "sps",ser:"",x:1000,y:1400 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 45, font: {size: 25},label: "유통물류관리", cat: "jg", opt: "st",ser:"",x:1000,y:1500 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 46, font: {size: 25}, label: "헬스케어공학", cat: "jg", opt: "st",ser:"",x:1000,y:1600 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 47, font: {size: 25},label: "산업시스템프로그래밍2", cat: "jg", opt: "st",ser:"sg",x:1000,y:1700 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 48, font: {size: 25},label: "서비스공학", cat: "jg", opt: "st",ser:"",x:1200,y:1300 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 49, font: {size: 25},label: "프로젝트관리", cat: "jg", opt: "sps",ser:"sg",x:1200,y:1400 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 50, font: {size: 25},label: "시뮬레이션과응용", cat: "jg", opt: "sps",ser:"sg",x:1200,y:1500 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 51, font: {size: 20},label: "데이터어낼리틱스", cat: "jg", opt: "st",ser:"",x:1200,y:1600 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 52, font: {size: 20},label: "정보시스템통합 및 실습", cat: "jg", opt: "st",ser:"sg",x:1200,y:1700 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 53, font: {size: 25},label: "산업시스템 공학종합설계", cat: "jg", opt: "ps",ser:"sg",x:1200,y:1800 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 54, font: {size: 25},label: "제품개발", cat: "jg", opt: "st",ser:"sg",x:1400,y:1400 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 55, font: {size: 25},label: "UI/UX 설계", cat: "jg", opt: "st",ser:"",x:1400,y:1500 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 56, font: {size: 25},label: "산업AI", cat: "jg", opt: "st",ser:"",x:1400,y:1600 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
-        { id: 57, font: {size: 20},label: "캡스톤 디자인 대회", cat: "jg", opt: "bgg",ser:"",x:1400,y:1700 , color: "#ee5d59",widthConstraint: { maximum: 140 }},
+        shapeProperties: { borderDashes: [5, 10]}},
+        { id: 2, font: {size: 25},label: "유통물류관리", cat: "jg", opt: "st",ser:"", color: "#ee5d59",x:1000,y:1500, },
+        { id: 3, font: {size: 25},label: "경영과학1", cat: "jg", opt: "ps",ser:"sg", color: "#ee5d59",x:600,y:1200, },
+        { id: 4, font: {size: 20},label: "데이터프로그래밍기초와실습", cat: "msc", opt: "ps",ser:"", color: "#fafa7f",x:400,y:1300,  },
+        { id: 5, font: {size: 25},label: "응용통계학", cat: "jg", opt: "ps",ser:"", color: "#ee5d59",x:400,y:1200, },
+        { id: 6, font: {size: 25},label: "미적분학및 연습1", cat: "msc", opt: "ps",ser:"", x:0,y:1100,color: {background: "#fafa7f",border: "black",}, },
+        { id: 7, font: {size: 25},label: "미적분학및 연습2", cat: "msc", opt: "ps",ser:"", x:200,y:1100, color: {background: "#fafa7f",border: "black",}, },
+        { id: 8, font: {size: 25},label: "확률 및 통계학", cat: "msc", opt: "st",ser:"", x:0,y:1200, color: "#fafa7f", },
+        { id: 9, font: {size: 20},label: "프로그래밍 기초와실습", cat: "msc", opt: "st",ser:"", x:0,y:1300, color: "#fafa7f", },
+        { id: 10, font: {size: 25},label: "일반물리학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1400, color: "#fafa7f", },
+        { id: 11, font: {size: 25},label: "일반물리학및 실험2", cat: "msc", opt: "sps",ser:"", x:200,y:1400, color: "#fafa7f", },
+        { id: 12, font: {size: 25},label: "일반화학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1500 , color: "#fafa7f", },
+        { id: 13, font: {size: 25},label: "일반화학및 실험2", cat: "msc", opt: "sps",ser:"", x:200,y:1500 , color: "#fafa7f", },
+        { id: 14, font: {size: 25},label: "일반생물학및 실험1", cat: "msc", opt: "sps",ser:"", x:0,y:1600 , color: "#fafa7f", },
+        { id: 15, font: {size: 25},label: "일반생물학및 실험1", cat: "msc", opt: "sps",ser:"", x:200,y:1600 , color: "#fafa7f", },
+        { id: 16, font: {size: 20},label: "산업시스템 공학의 이해", cat: "jg", opt: "ps",ser:"",x:0, y:1700, color: "#ee5d59" , },
+        { id: 17, font: {size: 22},label: "어드벤쳐디자인", cat: "jg", opt: "ps",ser:"sg",x:200,y:1700 , color: "#ee5d59", },
+        { id: 18, font: {size: 25},label: "자아와명상1", cat: "gy", opt: "ps",ser:"",x:0,y:1800, color: "#8dff75" , },
+        { id: 19, font: {size: 25},label: "자아와명상2", cat: "gy", opt: "ps",ser:"",x:200,y:1800, color: "#8dff75" , },
+        { id: 20, font: {size: 25},label: "커리어디자인", cat: "gy", opt: "ps",ser:"",x:0,y:1900, color: "#8dff75" , },
+        { id: 21, font: {size: 25},label: "불교와인간", cat: "gy", opt: "ps",ser:"",x:200,y:1900, color: "#8dff75" , },
+        { id: 22, font: {size: 20},label: "기술보고서작성및 발표", cat: "gy", opt: "ps",ser:"",x:0,y:2000, color: "#8dff75", },
+        { id: 23, font: {size: 25},label: "기업가정신과리더십 택1", cat: "gy", opt: "ps",ser:"",x:200,y:2000, color: "#8dff75" , },
+        { id: 24, font: {size: 25},label: "EAS1", cat: "gy", opt: "st",ser:"",x:0,y:2100, color: "#8dff75" , },
+        { id: 25, font: {size: 25},label: "EAS2", cat: "gy", opt: "st",ser:"",x:200,y:2100, color: "#8dff75" , },
+        { id: 26, font: {size: 20},label: "공학선형대수학", cat: "msc", opt: "ps",ser:"",x:400,y:1100 , color: "#fafa7f", },
+        { id: 27, font: {size: 25},label: "공학수학1", cat: "msc", opt: "st",ser:"",x:600,y:1100 , color: "#fafa7f", },
+        { id: 28, font: {size: 20},label: "데이터분석입문", cat: "jg", opt: "sps",ser:"",x:600,y:1350 , color: "#ee5d59", },
+        { id: 29, font: {size: 25},label: "3D모델링", cat: "jg", opt: "sps",ser:"sg",x:400,y:1500 , color: "#ee5d59", },
+        { id: 30, font: {size: 25},label: "인간공학", cat: "jg", opt: "sps",ser:"sg",x:400,y:1600 , color: "#ee5d59", },
+        { id: 31, font: {size: 25},label: "산업시스템 프로그래밍1", cat: "jg", opt: "ps",ser:"sg",x:400,y:1700 , color: "#ee5d59", },
+        { id: 32, font: {size: 25},label: "정보시스템 분석설계", cat: "jg", opt: "sps",ser:"sg",x:600,y:1750 , color: "#ee5d59", },
+        { id: 33, font: {size: 25},label: "기술창조와 특허", cat: "gy", opt: "sps",ser:"",x:400,y:2000 , color: "#70fdff", },
+        { id: 34, font: {size: 25},label: "공학경제", cat: "gy", opt: "ps",ser:"",x:600,y:2000 , color: "#70fdff", },
+        { id: 35, font: {size: 25},label: "공학윤리", cat: "gy", opt: "sps",ser:"",x:400,y:2100 , color: "#70fdff", },
+        { id: 36, font: {size: 25},label: "경영과학2", cat: "jg", opt: "st",ser:"",x:800,y:1150, color: "#ee5d59" , },
+        { id: 37, font: {size: 25},label: "실험계획법", cat: "jg", opt: "st",ser:"",x:800,y:1250 , color: "#ee5d59", },
+        { id: 38, font: {size: 25},label: "머신러닝1", cat: "jg", opt: "sps",ser:"",x:800,y:1350 , color: "#ee5d59", },
+        { id: 40, font: {size: 25},label: "금융공학입문", cat: "jg", opt: "st",ser:"",x:800,y:1800 , color: "#ee5d59", },
+        { id: 41, font: {size: 25},label: "품질공학", cat: "jg", opt: "sps",ser:"",x:1000,y:1100 , color: "#ee5d59", },
+        { id: 42, font: {size: 25},label: "첨단제조공학", cat: "jg", opt: "st",ser:"",x:1000,y:1200 , color: "#ee5d59", },
+        { id: 43, font: {size: 25},label: "머신러닝2", cat: "jg", opt: "st",ser:"",x:1000,y:1300 , color: "#ee5d59", },
+        { id: 44, font: {size: 25},label: "기술경영", cat: "jg", opt: "sps",ser:"",x:1000,y:1400 , color: "#ee5d59", },
+        { id: 45, font: {size: 25},label: "유통물류관리", cat: "jg", opt: "st",ser:"",x:1000,y:1500 , color: "#ee5d59", },
+        { id: 46, font: {size: 25}, label: "헬스케어공학", cat: "jg", opt: "st",ser:"",x:1000,y:1600 , color: "#ee5d59", },
+        { id: 47, font: {size: 25},label: "산업시스템프로그래밍2", cat: "jg", opt: "st",ser:"sg",x:1000,y:1700 , color: "#ee5d59", },
+        { id: 48, font: {size: 25},label: "서비스공학", cat: "jg", opt: "st",ser:"",x:1200,y:1300 , color: "#ee5d59", },
+        { id: 49, font: {size: 25},label: "프로젝트관리", cat: "jg", opt: "sps",ser:"sg",x:1200,y:1400 , color: "#ee5d59", },
+        { id: 50, font: {size: 25},label: "시뮬레이션과응용", cat: "jg", opt: "sps",ser:"sg",x:1200,y:1500 , color: "#ee5d59", },
+        { id: 51, font: {size: 20},label: "데이터어낼리틱스", cat: "jg", opt: "st",ser:"",x:1200,y:1600 , color: "#ee5d59", },
+        { id: 52, font: {size: 20},label: "정보시스템통합 및 실습", cat: "jg", opt: "st",ser:"sg",x:1200,y:1700 , color: "#ee5d59", },
+        { id: 53, font: {size: 25},label: "산업시스템 공학종합설계", cat: "jg", opt: "ps",ser:"sg",x:1200,y:1800 , color: "#ee5d59",
+        heightConstraint: 70,},
+        { id: 54, font: {size: 25},label: "제품개발", cat: "jg", opt: "st",ser:"sg",x:1400,y:1400 , color: "#ee5d59", },
+        { id: 55, font: {size: 25},label: "UI/UX 설계", cat: "jg", opt: "st",ser:"",x:1400,y:1500 , color: "#ee5d59", },
+        { id: 56, font: {size: 25},label: "산업AI", cat: "jg", opt: "st",ser:"",x:1400,y:1600 , color: "#ee5d59", },
+        { id: 39, font: {size: 20},label: "캡스톤 디자인 대회", cat: "jg", opt: "bgg",ser:"",x:1400,y:1700 , color: "#ee5d59", },
       ]);
 
       const edges = new vis.DataSet([
@@ -490,10 +514,33 @@
             return true;
         }
       };
-      
-      for( i = 1 ; i <= 57 ; i++){
-        nodes.update({id: i , title: nodes.label });
-    }
+
+      for( i = 1 ; i <= nodes.length ; i++){
+        node = nodes.get(i);
+        if (node.label != null){
+          node.title = node.label+node.id;
+          node.widthConstraint = 140;
+          node.heightConstraint =  70;
+        }
+      }
+
+
+    
+      // for( i = 1 ; i <= edges.length ; i++){
+      //   edge = edges.get(i);
+      //   edge.shape = circle
+      // } 곡선 생각
+      // var options = {
+      //         clickToUse: true,
+      //         editable:{
+      //          add: false,
+      //          remove: true
+      //          }
+
+      //       };
+         
+  
+             
 
       const edgesFilter = (edge) => {
         return edgesFilterValues[edge.relation];
