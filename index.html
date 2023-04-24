@@ -117,13 +117,11 @@
             edge.opacity = 0.5;
             edge.color = { color: "#848484", highlight: "#848484", opacity: 0.5 };
           }
-
-    edges.update(edge);
-  }  
-
+          edges.update(edge);
+        } 
         nodes.update(node);
-        });
-      }
+      });
+    }
 
       /**
        * In this example we do not mutate nodes or edges source data.
@@ -515,6 +513,16 @@
         }
       };
 
+      // 점섬과 테두리 굵기 설정
+      for( i = 1 ; i <= nodes.length ; i++){
+        node = nodes.get(i);
+        if (node.opt === "st"){
+          node.borderDash = [10, 10];
+          node.borderWidth = 1;
+        }
+      }
+
+      // 마우스 드래그시 팝업 설정
       for( i = 1 ; i <= nodes.length ; i++){
         node = nodes.get(i);
         if (node.label != null){
