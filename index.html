@@ -58,7 +58,22 @@
         <option value="bgg">비교과과정</option>
       </select>
     </label>
-    
+
+    <label>
+      Filter nodes2
+      <select id="nodeFilterSelect2">
+        <option value="">All characters</option>
+        <option value="jg">전공</option>
+        <option value="msc">MSC</option>
+        <option value="gy">교양</option>
+        <option value="ps">필수</option>
+        <option value="sps">선택적 필수</option>
+        <option value="st">선택</option>
+        <option value="sg">설계</option>
+        <option value="bgg">비교과과정</option>
+      </select>
+    </label>
+
     <br />
     <label>
       선수강 조건
@@ -519,15 +534,13 @@
       // 점섬과 테두리 굵기 설정
       for( i = 1 ; i <= nodes.length ; i++){
         node = nodes.get(i);
-        if (node.opt === "st"){
+        if (node.opt === "sps"){
           node.shapeProperties = { borderDashes: [5, 5]};
           node.borderWidth = 3;
           if(node.cat ==="msc"){
             node.color = {background: "#fafa7f",border: "black",};
           }else if (node.cat === "jg"){
             node.color = {background: "#ee5d59",border: "black",};
-          }else if (node.cat === "gy"){
-            node.color = {background: "#8dff75",border: "black",};
           }else if (node.cat === "gy"){
             node.color = {background: "#8dff75",border: "black",};
           }    
@@ -539,12 +552,10 @@
           }else if (node.cat === "jg"){
             node.color = {background: "#ee5d59",border: "black",};
           }else if (node.cat === "gy"){
-            node.color = {background: "#8dff75",border: "black",};
-          }else if (node.cat === "gy"){
-            node.color = {background: "#8dff75",border: "black",};
-          }    
+            node.color = {background: "#8dff75",border: "black",};    
+          }
         }
-      }
+        }
       // 마우스 드래그시 팝업 설정
       for( i = 1 ; i <= nodes.length ; i++){
         node = nodes.get(i);
